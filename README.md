@@ -29,9 +29,10 @@ Next.js 프로젝트 기본 세팅
 
 ### 테스트 & 개발
 
+- **Jest** - JavaScript 테스트 프레임워크
+  - React Testing Library 포함
+  - jsdom 환경 지원
 - **Storybook** - UI 컴포넌트 개발 및 문서화
-  - Accessibility 애드온
-  - 문서화 지원
 - **MSW (Mock Service Worker)** - API 모킹
 
 ### 유틸리티
