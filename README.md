@@ -1,3 +1,7 @@
+# 프로젝트 개요
+
+[[🔗 Storybook]](https://68f03b585d2182dc0ca9a472-ftcqayhygx.chromatic.com/)
+
 # My App
 
 Next.js 프로젝트 기본 세팅
