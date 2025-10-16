@@ -1,6 +1,6 @@
 import { type Config } from 'tailwindcss';
 
-import { colors, fontSize } from '@/styles/designTokens';
+import { colors, fontSize } from './src/styles/designTokens';
 
 const config: Config = {
   content: ['./src/**/*.{js,ts,jsx,tsx}', './src/**/*.svg', './styles//*.{css,scss}'],
