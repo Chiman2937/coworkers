@@ -1,4 +1,3 @@
-// src/styles/designTokens.ts
 export const colors = {
   brand: {
     primary: '#5189FA',
