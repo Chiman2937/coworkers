@@ -1,7 +1,7 @@
 import { defineConfig } from 'orval';
 
 export default defineConfig({
-  mogazoa: {
+  coworkers: {
     input: {
       // swagger ui의 json 경로 직접 지정
       // or 로컬 json 경로 지정
@@ -21,10 +21,22 @@ export default defineConfig({
           name: 'httpClient',
         },
         query: {
-          //react-query 사용할 훅 선택
           useSuspenseQuery: true,
-          useSuspenseInfiniteQuery: true,
-          useInfiniteQueryParam: 'cursor', //infiniteQuery 훅을 생성할 기준 지정(param에 cursor라는 속성이 있는 api 만 infinitequery 생성)
+          usePrefetch: true,
+        },
+        operations: {
+          ListArticles: {
+            query: {
+              useSuspenseInfiniteQuery: true,
+              useInfiniteQueryParam: 'page',
+            },
+          },
+          ListArticleComments: {
+            query: {
+              useSuspenseInfiniteQuery: true,
+              useInfiniteQueryParam: 'cursor',
+            },
+          },
         },
       },
     },
