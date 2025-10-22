@@ -11,6 +11,13 @@ const config: Config = {
       fontFamily: {
         primary: ['var(--font-primary)'],
       },
+      borderRadius: {
+        '1x': '4px',
+        '2x': '8px',
+        '3x': '12px',
+        '4x': '16px',
+        '5x': '20px',
+      },
     },
   },
   plugins: [],
