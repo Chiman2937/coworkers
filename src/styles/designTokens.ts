@@ -24,7 +24,7 @@ export const colors = {
     pressed: '#3B63B5',
   },
   border: {
-    primary: '#F8FAFC80',
+    primary: '#E2E8F0',
   },
   text: {
     primary: '#1E293B',

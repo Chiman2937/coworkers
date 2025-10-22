@@ -21,14 +21,23 @@
 }
 
 @layer components {
+  .z-header {
+    @apply z-50;
+  }
+}
+
+@layer components {
   .layout-center {
     @apply flex items-center justify-center;
   }
 }
 
 @layer utilities {
+  .animate-default {
+    @apply transition-all duration-200;
+  }
   .smooth-color {
-    @apply transition-colors duration-300;
+    @apply transition-colors duration-200;
   }
 }
 
