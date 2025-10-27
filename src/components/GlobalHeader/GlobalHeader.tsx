@@ -5,11 +5,11 @@ interface Props {
   className?: string;
 }
 
-const GlobalHeaderSmall = ({ className }: Props) => {
+const GlobalHeader = ({ className }: Props) => {
   return (
     <header
       className={cn(
-        'border-border-primary z-header bg-background-primary fixed flex h-13 w-full flex-row items-center border-b-1 px-4',
+        'border-border-primary z-header bg-background-primary relative flex h-13 w-full flex-row items-center border-b-1 px-4',
         className,
       )}
     >
@@ -18,4 +18,4 @@ const GlobalHeaderSmall = ({ className }: Props) => {
   );
 };
 
-export default GlobalHeaderSmall;
+export default GlobalHeader;

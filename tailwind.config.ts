@@ -18,6 +18,18 @@ const config: Config = {
         '4x': '16px',
         '5x': '20px',
       },
+      width: {
+        'sidebar-closed': 'var(--sidebar-closed)',
+        'sidebar-opened': 'var(--sidebar-opened)',
+      },
+      height: {
+        header: 'var(--header-height)',
+      },
+      padding: {
+        'sidebar-closed': 'var(--sidebar-closed)',
+        'sidebar-opened': 'var(--sidebar-opened)',
+        header: 'var(--header-height)',
+      },
     },
   },
   plugins: [],

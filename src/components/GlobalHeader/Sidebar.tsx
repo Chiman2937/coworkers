@@ -11,15 +11,15 @@ interface Props {
   className?: string;
 }
 
-const GlobalHeaderLarge = ({ className }: Props) => {
+const Sidebar = ({ className }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header
+    <aside
       className={cn(
-        'border-border-primary animate-default z-header bg-background-primary fixed flex h-screen flex-col items-center border-r-1',
-        isOpen && 'w-68',
-        !isOpen && 'w-18',
+        'border-border-primary animate-default z-header bg-background-primary relative flex h-screen flex-col items-center border-r-1',
+        isOpen && 'w-sidebar-opened',
+        !isOpen && 'w-sidebar-closed',
         className,
       )}
     >
@@ -60,8 +60,8 @@ const GlobalHeaderLarge = ({ className }: Props) => {
           </button>
         </div>
       </div>
-    </header>
+    </aside>
   );
 };
 
-export default GlobalHeaderLarge;
+export default Sidebar;
