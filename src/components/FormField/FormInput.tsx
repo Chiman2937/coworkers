@@ -3,6 +3,7 @@ import { FieldError, useFormContext } from 'react-hook-form';
 
 import IconInvisible from '@/assets/icons/icon_visible_false.svg';
 import IconVisible from '@/assets/icons/icon_visible_true.svg';
+import { cn } from '@/lib/utils';
 
 import { useFormField } from './FormField';
 
@@ -38,7 +39,15 @@ const FormInput = forwardRef<HTMLInputElement, FormInputProps>(({ type, ...props
       <input
         aria-invalid={!!error}
         id={name}
-        className=''
+        className={cn(
+          'smooth-color w-full',
+          'text-md-regular px-4 py-[13.5px]',
+          'md:text-lg-regular md:py-[14.5px]',
+          'placeholder:text-text-default text-text-primary',
+          'bg-background-primary rounded-3x border-border-primary border-1 outline-0',
+          'hover:border-brand-primary focus:border-brand-tertiary',
+          error && 'border-status-danger',
+        )}
         aria-describedby={error ? `${name}-error` : undefined}
         type={nextType}
         {...registerProps}
@@ -53,7 +62,11 @@ const FormInput = forwardRef<HTMLInputElement, FormInputProps>(({ type, ...props
         }}
       />
       {type === 'password' && (
-        <button onClick={handlePasswordIconClick}>
+        <button
+          className='absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer'
+          type='button'
+          onClick={handlePasswordIconClick}
+        >
           <IconEye className='size-5' />
         </button>
       )}

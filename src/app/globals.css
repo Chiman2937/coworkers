@@ -2,8 +2,11 @@
 @config '../../tailwind.config.ts';
 
 :root {
-  --background: #ffffff;
+  --background: #f1f5f9;
   --foreground: #171717;
+  --sidebar-closed: 72px;
+  --sidebar-opened: 270px;
+  --header-height: 52px;
 }
 
 @theme inline {

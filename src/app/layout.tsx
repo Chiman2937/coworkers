@@ -2,8 +2,8 @@ import './globals.css';
 
 import type { Metadata } from 'next';
 
-import GlobalHeaderLarge from '@/components/GlobalHeader/GlobaHeaderLarge';
-import GlobalHeaderSmall from '@/components/GlobalHeader/GlobalHeaderSmall';
+import GlobalHeader from '@/components/GlobalHeader/GlobalHeader';
+import Sidebar from '@/components/GlobalHeader/Sidebar';
 
 import { primary } from './font';
 import { Providers } from './Providers';
@@ -22,9 +22,11 @@ export default function RootLayout({
     <html lang='ko'>
       <body className={`${primary.className} antialiased`}>
         <Providers>
-          <GlobalHeaderLarge className='hidden md:flex' />
-          <GlobalHeaderSmall className='flex md:hidden' />
-          {children}
+          <GlobalHeader className='flex md:hidden' />
+          <div className='flex flex-row'>
+            <Sidebar className='hidden md:flex' />
+            {children}
+          </div>
         </Providers>
       </body>
     </html>
