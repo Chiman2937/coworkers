@@ -1,12 +1,12 @@
 import { redirect } from 'next/navigation';
 
-import SignupForm from './SignupForm';
+import LoginForm from './LoginForm';
 
-const SignupPage = async () => {
+const LoginPage = async () => {
   const { cookies } = await import('next/headers');
   const isAuthenticated = (await cookies()).get('isAuthenticated')?.value;
   if (isAuthenticated) redirect('/');
-  return <SignupForm />;
+  return <LoginForm />;
 };
 
-export default SignupPage;
+export default LoginPage;
