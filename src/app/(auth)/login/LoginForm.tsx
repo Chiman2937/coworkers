@@ -1,9 +1,12 @@
 'use client';
+import { useRouter } from 'next/navigation';
+
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
 
+import useAuthStore from '@/app/store/useAuthStore';
 import { Button } from '@/components/Button/Button';
 import FormField from '@/components/FormField/FormField';
 import FormHint from '@/components/FormField/FormHint';
@@ -20,7 +23,9 @@ const schema = z.object({
   password: z.string().min(1, '비밀번호를 입력해주세요').max(10, '열글자 이하 입력 필요'),
 });
 
-const SigninPage = () => {
+const LoginForm = () => {
+  const { signin } = useAuthStore();
+  const router = useRouter();
   const methods = useForm({
     resolver: zodResolver(schema),
     mode: 'onBlur',
@@ -30,8 +35,9 @@ const SigninPage = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof schema>) => {
-    console.log(data);
+  const onSubmit = async (data: z.infer<typeof schema>) => {
+    await signin(data);
+    router.replace('/');
   };
 
   return (
@@ -81,4 +87,4 @@ const SigninPage = () => {
   );
 };
 
-export default SigninPage;
+export default LoginForm;
