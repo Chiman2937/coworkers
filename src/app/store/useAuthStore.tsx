@@ -5,11 +5,11 @@ import { devtools } from 'zustand/middleware';
 
 import { signIn, signUp } from '@/api/endpoints/auth/auth';
 import { getUser } from '@/api/endpoints/user/user';
-import { SignInRequestBody, SignInResponseUser, SignUpRequestBody } from '@/api/models';
+import { GetUser200, SignInRequestBody, SignUpRequestBody } from '@/api/models';
 import { DEFAULT_COOKIE_OPTIONS, deleteCookie, getCookie, setCookie } from '@/lib/cookies';
 
 interface AuthStore {
-  user: SignInResponseUser | null;
+  user: GetUser200 | null;
   setUser: () => Promise<void>;
   resetUser: () => void;
   signup: (payload: SignUpRequestBody) => Promise<void>;
