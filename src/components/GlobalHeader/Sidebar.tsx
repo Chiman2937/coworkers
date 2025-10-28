@@ -7,6 +7,8 @@ import IconTitleLarge from '@/assets/icons/icon_logo_with_text_large.svg';
 import IconProfileDefault from '@/assets/icons/icon_profile_default.svg';
 import { cn } from '@/lib/cn';
 
+import TeamSelect from '../TeamSelect/TeamSelect';
+
 interface Props {
   className?: string;
 }
@@ -39,8 +41,10 @@ const Sidebar = ({ className }: Props) => {
         </button>
       </div>
       {/* navigation 영역 */}
-      <nav className='grow'>
-        <div className={cn(isOpen && 'px-4 py-6', !isOpen && 'px-2 py-6')}></div>
+      <nav className='w-full grow'>
+        <div className={cn(isOpen && 'px-4 py-6', !isOpen && 'px-2 py-6')}>
+          <TeamSelect isSidebarOpen={isOpen} />
+        </div>
       </nav>
       {/* 프로필 영역 */}
       <div className={cn('w-full', isOpen && 'px-4')}>
