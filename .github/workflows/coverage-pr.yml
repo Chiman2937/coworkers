@@ -189,7 +189,9 @@ jobs:
             ${formatRow('Lines', false, '', baseLines, currentLines, linesDiff)}
             ${formatRow('Branches', false, '', baseBranches, currentBranches, branchesDiff)}
             ===========================================
+            ${formatRow('Hits', true, '', baseHits, currentHits, hitsDiff)}
             ${hitsDiff >= 0 ? '+' : '-'} Hits       ${String(baseHits).padStart(6)}   ${String(currentHits).padStart(6)}   ${(hitsDiff >= 0 ? '+' : '') + String(hitsDiff).padStart(6)}     
+            ${formatRow('Misses', true, '', baseMisses, currentMisses, missesDiff)}
             ${missesDiff >= 0 ? '+' : '-'} Misses     ${String(baseMisses).padStart(6)}   ${String(currentMisses).padStart(6)}   ${(missesDiff >= 0 ? '+' : '') + String(missesDiff).padStart(6)}     
             \`\`\`
             `;
