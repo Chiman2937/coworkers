@@ -28,6 +28,18 @@ jobs:
       - name: Run tests with coverage
         run: npm run test:coverage
 
+      - name: Debug - Check coverage files
+        if: always()
+        run: |
+          echo "=== Working directory ==="
+          pwd
+          echo "=== All files ==="
+          find . -name "coverage-summary.json" -type f
+          echo "=== Coverage directory ==="
+          ls -la coverage/ || echo "No coverage directory"
+          echo "=== Coverage files ==="
+          ls -la coverage/*.json || echo "No JSON files"
+
       - name: Download base coverage
         uses: dawidd6/action-download-artifact@v3
         with:
