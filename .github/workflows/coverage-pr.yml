@@ -163,7 +163,6 @@ jobs:
               const prefix = diff >= 0 ? '+' : '-'
               return `${useHighlight ? prefix + ' ' : '  '}${formatValue(base)}${formatValue(current)}${formatValue(diff)}`
             }
-            const getData
             // Header
             let header;
             if (isFirstRun) {
