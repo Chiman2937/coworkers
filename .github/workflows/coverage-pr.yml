@@ -38,19 +38,76 @@ jobs:
           script: |
             const fs = require('fs');
 
-            // Read coverage files
-            const currentCoverage = JSON.parse(
-              fs.readFileSync('coverage/coverage-summary.json', 'utf8')
-            );
+            // Check if current coverage exists
+            let currentCoverage;
+            try {
+              currentCoverage = JSON.parse(
+                fs.readFileSync('coverage/coverage-summary.json', 'utf8')
+              );
+            } catch (error) {
+              console.log('❌ No coverage file generated. Tests may have failed.');
+              
+              // Post error comment
+              const errorComment = `## Coverage Report
+              
+              ⚠️ **Unable to generate coverage report**
+              
+              Coverage file not found. This usually means:
+              - Tests failed to run
+              - \`npm run test:coverage\` didn't generate coverage
+              - Coverage directory is not created
+              
+              Please check the test execution logs above.`;
+              
+              const { data: comments } = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+              });
+              
+              const botComment = comments.find(comment => 
+                comment.user.type === 'Bot' && 
+                comment.body.includes('## Coverage Report')
+              );
+              
+              if (botComment) {
+                await github.rest.issues.updateComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: botComment.id,
+                  body: errorComment
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: errorComment
+                });
+              }
+              
+              return; // Exit early
+            }
 
+            // Check if base coverage exists
             let baseCoverage;
+            let isFirstRun = false;
             try {
               baseCoverage = JSON.parse(
                 fs.readFileSync('base-coverage/coverage-summary.json', 'utf8')
               );
             } catch (error) {
-              console.log('No base coverage found, using empty baseline');
-              baseCoverage = { total: { lines: { pct: 0, total: 0, covered: 0 }, branches: { total: 0 }, statements: { total: 0 }, functions: { total: 0 } } };
+              console.log('⚠️ No base coverage found. This is the first run.');
+              isFirstRun = true;
+              // Use empty baseline
+              baseCoverage = { 
+                total: { 
+                  lines: { pct: 0, total: 0, covered: 0 },
+                  branches: { total: 0 },
+                  statements: { total: 0 },
+                  functions: { total: 0 }
+                } 
+              };
             }
 
             const current = currentCoverage.total;
@@ -64,8 +121,14 @@ jobs:
             const missesDiff = (current.lines.total - current.lines.covered) - (base.lines.total - base.lines.covered);
 
             // Header
-            const direction = coverageDiff > 0 ? 'increase' : coverageDiff < 0 ? 'decrease' : 'remain the same';
-            const header = `Merging **#${context.issue.number}** into **main** will ${direction} coverage by \`${Math.abs(coverageDiff)}%\`.`;
+            let header;
+            if (isFirstRun) {
+              header = `## 📊 First Coverage Report\n\nCurrent coverage: **${current.lines.pct.toFixed(2)}%**\n\n_This is the first coverage report. Future PRs will show diff against this baseline._`;
+            } else {
+              const direction = coverageDiff > 0 ? 'increase' : coverageDiff < 0 ? 'decrease' : 'remain the same';
+              const emoji = coverageDiff > 0 ? '📈' : coverageDiff < 0 ? '📉' : '➡️';
+              header = `${emoji} Merging **#${context.issue.number}** into **main** will ${direction} coverage by \`${Math.abs(coverageDiff)}%\`.`;
+            }
 
             // Coverage Diff Table
             const diffTable = `
@@ -84,38 +147,40 @@ jobs:
             \`\`\`
             `;
 
-            // Impacted Files
-            const impactedFiles = [];
-            for (const file of Object.keys(currentCoverage)) {
-              if (file === 'total') continue;
-              if (file.includes('.test.') || file.includes('.spec.')) continue;
+            // Impacted Files (skip for first run)
+            let impactedTable = '';
+            if (!isFirstRun) {
+              const impactedFiles = [];
+              for (const file of Object.keys(currentCoverage)) {
+                if (file === 'total') continue;
+                if (file.includes('.test.') || file.includes('.spec.')) continue;
+                
+                const currentPct = currentCoverage[file]?.lines.pct || 0;
+                const basePct = baseCoverage[file]?.lines.pct || 0;
+                const diff = currentPct - basePct;
+                
+                if (Math.abs(diff) > 0.01) {
+                  impactedFiles.push({
+                    name: file,
+                    current: currentPct.toFixed(2),
+                    diff: diff.toFixed(2),
+                    arrow: diff < -0.01 ? '⬇️' : diff > 0.01 ? '⬆️' : '➡️'
+                  });
+                }
+              }
               
-              const currentPct = currentCoverage[file]?.lines.pct || 0;
-              const basePct = baseCoverage[file]?.lines.pct || 0;
-              const diff = currentPct - basePct;
-              
-              if (Math.abs(diff) > 0.01) {
-                impactedFiles.push({
-                  name: file,
-                  current: currentPct.toFixed(2),
-                  diff: diff.toFixed(2),
-                  arrow: diff < -0.01 ? '⬇️' : diff > 0.01 ? '⬆️' : '➡️'
+              if (impactedFiles.length > 0) {
+                impactedTable = '\n## Impacted Files\n\n| File | Coverage Δ |\n|------|------------|\n';
+                impactedFiles.forEach(f => {
+                  impactedTable += `| \`${f.name}\` | \`${f.current}% (${f.diff >= 0 ? '+' : ''}${f.diff}%)\` ${f.arrow} |\n`;
                 });
               }
-            }
-
-            let impactedTable = '';
-            if (impactedFiles.length > 0) {
-              impactedTable = '\n## Impacted Files\n\n| File | Coverage Δ |\n|------|------------|\n';
-              impactedFiles.forEach(f => {
-                impactedTable += `| \`${f.name}\` | \`${f.current}% (${f.diff >= 0 ? '+' : ''}${f.diff}%)\` ${f.arrow} |\n`;
-              });
             }
 
             // Final comment
             const comment = `## Coverage Report\n\n${header}\n${diffTable}${impactedTable}`;
 
-            // Find existing comment
+            // Find and update or create comment
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -128,7 +193,6 @@ jobs:
             );
 
             if (botComment) {
-              // Update existing comment
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -136,7 +200,6 @@ jobs:
                 body: comment
               });
             } else {
-              // Create new comment
               await github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
