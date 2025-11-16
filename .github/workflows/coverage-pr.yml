@@ -131,15 +131,31 @@ jobs:
             const base = baseCoverage.total;
 
             // Calculate stats
+            const currentIssueNumber = context.issue.number;
+
+            const baseCoverage = base.lines.pct;
+            const currentCoverage = current.lines.pct;
+            const coverageDiff = currentCoverage - baseCoverage;
+
             const baseFiles = Object.keys(baseCoverage).filter(key => key !== 'total').length;
             const currentFiles = Object.keys(currentCoverage).filter(key => key !== 'total').length;
             const filesDiff = currentFiles - baseFiles;
 
-            const coverageDiff = current.lines.pct - base.lines.pct;
-            const linesDiff = current.lines.total - base.lines.total;
+            const baseLines = base.lines.total;
+            const currentLines = current.lines.total;
+            const linesDiff = currentLines - baseLines;
+
+            const baseBranches = base.branches.total;
+            const currentBranches = current.branches.total;
             const branchesDiff = current.branches.total - base.branches.total;
-            const hitsDiff = current.lines.covered - base.lines.covered;
-            const missesDiff = (current.lines.total - current.lines.covered) - (base.lines.total - base.lines.covered);
+
+            const baseHits = base.lines.covered;
+            const currentHits = current.lines.covered;
+            const hitsDiff = currentHits - baseHits;
+
+            const baseMisses = base.lines.total - base.lines.covered;
+            const currentMisses = current.lines.total - current.lines.covered;
+            const missesDiff = currentMisses - baseMisses;
 
             // Header
             let header;
@@ -155,16 +171,16 @@ jobs:
             const diffTable = `
             \`\`\`diff
             @@            Coverage Diff              @@
-            ##             main   ${String('#' + context.issue.number).padStart(6)}       +/-   ##
+            ##             main   ${String('#' + currentIssueNumber).padStart(6)}       +/-   ##
             ===========================================
-            ${coverageDiff >= 0 ? '+' : '-'} Coverage   ${base.lines.pct.toFixed(2).padStart(5)}%   ${current.lines.pct.toFixed(2).padStart(5)}%   ${(coverageDiff >= 0 ? '+' : '') + coverageDiff.toFixed(2).padStart(5)}%     
+            ${coverageDiff >= 0 ? '+' : '-'} Coverage   ${baseCoverage.toFixed(2).padStart(5)}%   ${currentCoverage.toFixed(2).padStart(5)}%   ${(coverageDiff >= 0 ? '+' : '') + coverageDiff.toFixed(2).padStart(5)}%     
             ===========================================
               Files      ${String(baseFiles).padStart(6)}   ${String(currentFiles).padStart(6)}   ${(filesDiff >= 0 ? '+' : '') + String(filesDiff).padStart(6)}
-              Lines      ${String(base.lines.total).padStart(6)}   ${String(current.lines.total).padStart(6)}   ${(linesDiff >= 0 ? '+' : '') + String(linesDiff).padStart(6)}
-              Branches   ${String(base.branches.total).padStart(6)}   ${String(current.branches.total).padStart(6)}   ${(branchesDiff >= 0 ? '+' : '') + String(branchesDiff).padStart(6)}
+              Lines      ${String(baseLines).padStart(6)}   ${String(currentLines).padStart(6)}   ${(linesDiff >= 0 ? '+' : '') + String(linesDiff).padStart(6)}
+              Branches   ${String(baseBranches).padStart(6)}   ${String(currentBranches).padStart(6)}   ${(branchesDiff >= 0 ? '+' : '') + String(branchesDiff).padStart(6)}
             ===========================================
-            ${hitsDiff >= 0 ? '+' : '-'} Hits       ${String(base.lines.covered).padStart(6)}   ${String(current.lines.covered).padStart(6)}   ${(hitsDiff >= 0 ? '+' : '') + String(hitsDiff).padStart(6)}     
-            ${missesDiff >= 0 ? '+' : '-'} Misses     ${String(base.lines.total - base.lines.covered).padStart(6)}   ${String(current.lines.total - current.lines.covered).padStart(6)}   ${(missesDiff >= 0 ? '+' : '') + String(missesDiff).padStart(6)}     
+            ${hitsDiff >= 0 ? '+' : '-'} Hits       ${String(baseHits).padStart(6)}   ${String(currentHits).padStart(6)}   ${(hitsDiff >= 0 ? '+' : '') + String(hitsDiff).padStart(6)}     
+            ${missesDiff >= 0 ? '+' : '-'} Misses     ${String(baseMisses).padStart(6)}   ${String(currentMisses).padStart(6)}   ${(missesDiff >= 0 ? '+' : '') + String(missesDiff).padStart(6)}     
             \`\`\`
             `;
 
