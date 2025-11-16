@@ -151,14 +151,14 @@ jobs:
             const diffTable = `
             \`\`\`diff
             @@            Coverage Diff             @@
-            ##             main   ${String('#' + context.issue.number).padStart(6)}      +/-   ##
-            ==========================================
+            ##             main   ${String('#' + context.issue.number).padStart(6)}       +/-   ##
+            ===========================================
             ${coverageDiff >= 0 ? '+' : '-'} Coverage   ${base.lines.pct.toFixed(2).padStart(5)}%   ${current.lines.pct.toFixed(2).padStart(5)}%   ${(coverageDiff >= 0 ? '+' : '') + coverageDiff.toFixed(2).padStart(5)}%     
-            ==========================================
+            ===========================================
               Files      ${String(base.statements.total).padStart(6)}   ${String(current.statements.total).padStart(6)}   ${(linesDiff >= 0 ? '+' : '') + String(linesDiff).padStart(6)}
               Lines      ${String(base.lines.total).padStart(6)}   ${String(current.lines.total).padStart(6)}   ${(linesDiff >= 0 ? '+' : '') + String(linesDiff).padStart(6)}
               Branches   ${String(base.branches.total).padStart(6)}   ${String(current.branches.total).padStart(6)}   ${(branchesDiff >= 0 ? '+' : '') + String(branchesDiff).padStart(6)}
-            ==========================================
+            ===========================================
             ${hitsDiff >= 0 ? '+' : '-'} Hits       ${String(base.lines.covered).padStart(6)}   ${String(current.lines.covered).padStart(6)}   ${(hitsDiff >= 0 ? '+' : '') + String(hitsDiff).padStart(6)}
             ${missesDiff >= 0 ? '+' : '-'} Misses     ${String(base.lines.total - base.lines.covered).padStart(6)}   ${String(current.lines.total - current.lines.covered).padStart(6)}   ${(missesDiff >= 0 ? '+' : '') + String(missesDiff).padStart(6)}
               Partials   ${String(0).padStart(6)}   ${String(0).padStart(6)}              
