@@ -154,16 +154,16 @@ jobs:
             const diffTable = `
             \`\`\`diff
             @@           Coverage Diff            @@
-            ##           main      #${context.issue.number}       +/-   ##
+            ##           main       #${context.issue.number}      +/-   ##
             ==========================================
-            ${coverageDiff >= 0 ? '+' : '-'} Coverage   ${padFloat(base.lines.pct)}%   ${padFloat(current.lines.pct)}%   ${coverageDiff >= 0 ? '+' : ''}${padFloat(coverageDiff)}%
+              Coverage   ${padFloat(base.lines.pct)}%   ${padFloat(current.lines.pct)}%   ${coverageDiff >= 0 ? '+' : ''}${padFloat(Math.abs(coverageDiff))}%
             ==========================================
-              Files      ${pad(base.statements.total)}    ${pad(current.statements.total)}    ${linesDiff >= 0 ? '+' : ''}${pad(linesDiff)}
-              Lines      ${pad(base.lines.total)}    ${pad(current.lines.total)}    ${linesDiff >= 0 ? '+' : ''}${pad(linesDiff)}
-              Branches   ${pad(base.branches.total)}    ${pad(current.branches.total)}    ${branchesDiff >= 0 ? '+' : ''}${pad(branchesDiff)}
+              Files      ${pad(base.statements.total)}    ${pad(current.statements.total)}    ${linesDiff >= 0 ? '+' : ''}${pad(Math.abs(linesDiff))}
+              Lines      ${pad(base.lines.total)}    ${pad(current.lines.total)}    ${linesDiff >= 0 ? '+' : ''}${pad(Math.abs(linesDiff))}
+              Branches   ${pad(base.branches.total)}    ${pad(current.branches.total)}    ${branchesDiff >= 0 ? '+' : ''}${pad(Math.abs(branchesDiff))}
             ==========================================
-            ${hitsDiff >= 0 ? '+' : '-'} Hits       ${pad(base.lines.covered)}    ${pad(current.lines.covered)}    ${hitsDiff >= 0 ? '+' : ''}${pad(hitsDiff)}
-            ${missesDiff >= 0 ? '+' : '-'} Misses     ${pad(base.lines.total - base.lines.covered)}    ${pad(current.lines.total - current.lines.covered)}    ${missesDiff >= 0 ? '+' : ''}${pad(missesDiff)}
+              Hits       ${pad(base.lines.covered)}    ${pad(current.lines.covered)}    ${hitsDiff >= 0 ? '+' : ''}${pad(Math.abs(hitsDiff))}
+              Misses     ${pad(base.lines.total - base.lines.covered)}    ${pad(current.lines.total - current.lines.covered)}    ${missesDiff >= 0 ? '+' : ''}${pad(Math.abs(missesDiff))}
             \`\`\`
             `;
 
