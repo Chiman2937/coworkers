@@ -131,6 +131,10 @@ jobs:
             const base = baseCoverage.total;
 
             // Calculate stats
+            const baseFiles = Object.keys(baseCoverage).filter(key => key !== 'total').length;
+            const currentFiles = Object.keys(currentCoverage).filter(key => key !== 'total').length;
+            const filesDiff = currentFiles - baseFiles;
+
             const coverageDiff = current.lines.pct - base.lines.pct;
             const linesDiff = current.lines.total - base.lines.total;
             const branchesDiff = current.branches.total - base.branches.total;
@@ -155,7 +159,7 @@ jobs:
             ===========================================
             ${coverageDiff >= 0 ? '+' : '-'} Coverage   ${base.lines.pct.toFixed(2).padStart(5)}%   ${current.lines.pct.toFixed(2).padStart(5)}%   ${(coverageDiff >= 0 ? '+' : '') + coverageDiff.toFixed(2).padStart(5)}%     
             ===========================================
-              Files      ${String(base.statements.total).padStart(6)}   ${String(current.statements.total).padStart(6)}   ${(linesDiff >= 0 ? '+' : '') + String(linesDiff).padStart(6)}
+              Files      ${String(baseFiles).padStart(6)}   ${String(currentFiles).padStart(6)}   ${(filesDiff >= 0 ? '+' : '') + String(filesDiff).padStart(6)}
               Lines      ${String(base.lines.total).padStart(6)}   ${String(current.lines.total).padStart(6)}   ${(linesDiff >= 0 ? '+' : '') + String(linesDiff).padStart(6)}
               Branches   ${String(base.branches.total).padStart(6)}   ${String(current.branches.total).padStart(6)}   ${(branchesDiff >= 0 ? '+' : '') + String(branchesDiff).padStart(6)}
             ===========================================
