@@ -162,9 +162,9 @@ jobs:
             if (isFirstRun) {
               header = `This is the first coverage report. Future PRs will show diff against this baseline.\n\nCurrent coverage: **${current.lines.pct.toFixed(2)}%**\n\n`;
             } else {
-              const direction = coverageDiff > 0 ? 'increase' : coverageDiff < 0 ? 'decrease' : 'remain the same';
-              const emoji = coverageDiff > 0 ? '📈' : coverageDiff < 0 ? '📉' : '➡️';
-              header = `${emoji} Merging **#${context.issue.number}** into **main** will ${direction} coverage by \`${Math.abs(coverageDiff)}%\`.`;
+              const direction = coveragePercentDiff > 0 ? 'increase' : coveragePercentDiff < 0 ? 'decrease' : 'remain the same';
+              const emoji = coveragePercentDiff > 0 ? '📈' : coveragePercentDiff < 0 ? '📉' : '➡️';
+              header = `${emoji} Merging **#${context.issue.number}** into **main** will ${direction} coverage by \`${Math.abs(coveragePercentDiff).toFixed(2)}%\`.`;
             }
 
             // Coverage Diff Table
