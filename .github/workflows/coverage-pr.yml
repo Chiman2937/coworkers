@@ -84,7 +84,7 @@ jobs:
               
               const botComment = comments.find(comment => 
                 comment.user.type === 'Bot' && 
-                comment.body.includes('## Coverage Report')
+                comment.body.includes('## 📊 Coverage Report')
               );
               
               if (botComment) {
@@ -191,7 +191,7 @@ jobs:
             console.log('Total files in base coverage:', Object.keys(baseCoverage).length);
 
             if (isFirstRun) {
-              impactedTable = '\n### Impacted Files\n\n📋 **Baseline established**\n\n_This is the first coverage report. Future PRs will show which files are impacted by coverage changes._';
+              impactedTable = '\n### Impacted Files\n\n📋 **Baseline established**\n\nThis is the first coverage report. Future PRs will show which files are impacted by coverage changes.';
             } else {
               const impactedFiles = [];
               for (const file of Object.keys(currentCoverage)) {
@@ -218,7 +218,7 @@ jobs:
                   impactedTable += `| \`${f.name}\` | \`${f.current}% (${f.diff >= 0 ? '+' : ''}${f.diff}%)\` ${f.arrow} |\n`;
                 });
               } else {
-                impactedTable = '\n### Impacted Files\n\n✅ **No files were impacted by this PR**\n\n_All modified files maintained their current coverage._';
+                impactedTable = '\n### Impacted Files\n\n✅ **No files were impacted by this PR**\n\nAll modified files maintained their current coverage.';
               }
             }
 
