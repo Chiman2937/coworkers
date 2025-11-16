@@ -158,10 +158,10 @@ jobs:
             const missesDiff = currentMisses - baseMisses;
 
             const formatValue = (v, len = 9) => String(v).padStart(len);
-            const formatRow = (label, useHighlight, base, current, diff) => {
-              const sign = diff >=0 ? '+' : '';
+            const formatRow = (label, useHighlight, unit, base, current, diff) => {
+              const sign = diff >= 0 ? '+' : '';
               const prefix = diff >= 0 ? '+' : '-'
-              return `${useHighlight ? prefix + ' ' : '  '}${formatValue(label,8)}${formatValue(base)}${formatValue(current)}${formatValue(diff)}`
+              return `${useHighlight ? prefix + ' ' : '  '}${formatValue(label,8)}${formatValue(base + unit)}${formatValue(current + unit)}${formatValue(sign + diff + unit)}`
             }
 
             // Header
@@ -182,7 +182,7 @@ jobs:
             @@             Coverage Diff             @@
             ##             main   ${String('#' + currentIssueNumber).padStart(6)}       +/-   ##
             ===========================================
-            ${formatRow('Coverage', true, baseCoveragePercent + '%', currentCoveragePercent + '%', coveragePercentDiff + '%')}
+            ${formatRow('Coverage', true, '%', baseCoveragePercent, currentCoveragePercent, coveragePercentDiff)}
             ${coveragePercentDiff >= 0 ? '+' : '-'} Coverage   ${baseCoveragePercent.toFixed(2).padStart(5)}%   ${currentCoveragePercent.toFixed(2).padStart(5)}%   ${(coveragePercentDiff >= 0 ? '+' : '') + coveragePercentDiff.toFixed(2).padStart(5)}%     
             ===========================================
               Files      ${String(baseFiles).padStart(6)}   ${String(currentFiles).padStart(6)}   ${(filesDiff >= 0 ? '+' : '') + String(filesDiff).padStart(6)}
