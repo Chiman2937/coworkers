@@ -131,7 +131,7 @@ jobs:
             const base = baseCoverage.total;
 
             // Calculate stats
-            const coverageDiff = (current.lines.pct - base.lines.pct).toFixed(2);
+            const coverageDiff = current.lines.pct - base.lines.pct;
             const linesDiff = current.lines.total - base.lines.total;
             const branchesDiff = current.branches.total - base.branches.total;
             const hitsDiff = current.lines.covered - base.lines.covered;
