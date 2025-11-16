@@ -148,19 +148,22 @@ jobs:
             }
 
             // Coverage Diff Table
+            const pad = (num, width = 8) => String(num).padStart(width);
+            const padFloat = (num, width = 7) => num.toFixed(2).padStart(width);
+
             const diffTable = `
             \`\`\`diff
-            @@            Coverage Diff             @@
-            ##             main      #${context.issue.number.toString().padStart(6)}      +/-   ##
+            @@           Coverage Diff            @@
+            ##           main      #${context.issue.number}       +/-   ##
             ==========================================
-            ${coverageDiff >= 0 ? '+' : '-'} Coverage   ${base.lines.pct.toFixed(2)}%   ${current.lines.pct.toFixed(2)}%   ${coverageDiff >= 0 ? '+' : ''}${coverageDiff}%     
+            ${coverageDiff >= 0 ? '+' : '-'} Coverage   ${padFloat(base.lines.pct)}%   ${padFloat(current.lines.pct)}%   ${coverageDiff >= 0 ? '+' : ''}${padFloat(coverageDiff)}%
             ==========================================
-              Files          ${base.statements.total.toString().padStart(6)}   ${current.statements.total.toString().padStart(6)}   ${linesDiff >= 0 ? '+' : ''}${linesDiff}
-              Lines          ${base.lines.total.toString().padStart(6)}   ${current.lines.total.toString().padStart(6)}   ${linesDiff >= 0 ? '+' : ''}${linesDiff}
-              Branches       ${base.branches.total.toString().padStart(6)}   ${current.branches.total.toString().padStart(6)}   ${branchesDiff >= 0 ? '+' : ''}${branchesDiff}
+              Files      ${pad(base.statements.total)}    ${pad(current.statements.total)}    ${linesDiff >= 0 ? '+' : ''}${pad(linesDiff)}
+              Lines      ${pad(base.lines.total)}    ${pad(current.lines.total)}    ${linesDiff >= 0 ? '+' : ''}${pad(linesDiff)}
+              Branches   ${pad(base.branches.total)}    ${pad(current.branches.total)}    ${branchesDiff >= 0 ? '+' : ''}${pad(branchesDiff)}
             ==========================================
-            ${hitsDiff >= 0 ? '+' : '-'} Hits           ${base.lines.covered.toString().padStart(6)}   ${current.lines.covered.toString().padStart(6)}   ${hitsDiff >= 0 ? '+' : ''}${hitsDiff}
-            ${missesDiff >= 0 ? '+' : '-'} Misses         ${(base.lines.total - base.lines.covered).toString().padStart(6)}   ${(current.lines.total - current.lines.covered).toString().padStart(6)}   ${missesDiff >= 0 ? '+' : ''}${missesDiff}
+            ${hitsDiff >= 0 ? '+' : '-'} Hits       ${pad(base.lines.covered)}    ${pad(current.lines.covered)}    ${hitsDiff >= 0 ? '+' : ''}${pad(hitsDiff)}
+            ${missesDiff >= 0 ? '+' : '-'} Misses     ${pad(base.lines.total - base.lines.covered)}    ${pad(current.lines.total - current.lines.covered)}    ${missesDiff >= 0 ? '+' : ''}${pad(missesDiff)}
             \`\`\`
             `;
 
