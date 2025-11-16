@@ -1,0 +1,146 @@
+name: PR Coverage Report
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: Download base coverage
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: coverage-base.yml
+          branch: main
+          name: base-coverage
+          path: base-coverage
+        continue-on-error: true
+
+      - name: Create coverage report
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            // Read coverage files
+            const currentCoverage = JSON.parse(
+              fs.readFileSync('coverage/coverage-summary.json', 'utf8')
+            );
+
+            let baseCoverage;
+            try {
+              baseCoverage = JSON.parse(
+                fs.readFileSync('base-coverage/coverage-summary.json', 'utf8')
+              );
+            } catch (error) {
+              console.log('No base coverage found, using empty baseline');
+              baseCoverage = { total: { lines: { pct: 0, total: 0, covered: 0 }, branches: { total: 0 }, statements: { total: 0 }, functions: { total: 0 } } };
+            }
+
+            const current = currentCoverage.total;
+            const base = baseCoverage.total;
+
+            // Calculate stats
+            const coverageDiff = (current.lines.pct - base.lines.pct).toFixed(2);
+            const linesDiff = current.lines.total - base.lines.total;
+            const branchesDiff = current.branches.total - base.branches.total;
+            const hitsDiff = current.lines.covered - base.lines.covered;
+            const missesDiff = (current.lines.total - current.lines.covered) - (base.lines.total - base.lines.covered);
+
+            // Header
+            const direction = coverageDiff > 0 ? 'increase' : coverageDiff < 0 ? 'decrease' : 'remain the same';
+            const header = `Merging **#${context.issue.number}** into **main** will ${direction} coverage by \`${Math.abs(coverageDiff)}%\`.`;
+
+            // Coverage Diff Table
+            const diffTable = `
+            \`\`\`diff
+            @@            Coverage Diff             @@
+            ##             main      #${context.issue.number.toString().padStart(6)}      +/-   ##
+            ==========================================
+            ${coverageDiff >= 0 ? '+' : '-'} Coverage   ${base.lines.pct.toFixed(2)}%   ${current.lines.pct.toFixed(2)}%   ${coverageDiff >= 0 ? '+' : ''}${coverageDiff}%     
+            ==========================================
+              Files          ${base.statements.total.toString().padStart(6)}   ${current.statements.total.toString().padStart(6)}   ${linesDiff >= 0 ? '+' : ''}${linesDiff}
+              Lines          ${base.lines.total.toString().padStart(6)}   ${current.lines.total.toString().padStart(6)}   ${linesDiff >= 0 ? '+' : ''}${linesDiff}
+              Branches       ${base.branches.total.toString().padStart(6)}   ${current.branches.total.toString().padStart(6)}   ${branchesDiff >= 0 ? '+' : ''}${branchesDiff}
+            ==========================================
+            ${hitsDiff >= 0 ? '+' : '-'} Hits           ${base.lines.covered.toString().padStart(6)}   ${current.lines.covered.toString().padStart(6)}   ${hitsDiff >= 0 ? '+' : ''}${hitsDiff}
+            ${missesDiff >= 0 ? '+' : '-'} Misses         ${(base.lines.total - base.lines.covered).toString().padStart(6)}   ${(current.lines.total - current.lines.covered).toString().padStart(6)}   ${missesDiff >= 0 ? '+' : ''}${missesDiff}
+            \`\`\`
+            `;
+
+            // Impacted Files
+            const impactedFiles = [];
+            for (const file of Object.keys(currentCoverage)) {
+              if (file === 'total') continue;
+              if (file.includes('.test.') || file.includes('.spec.')) continue;
+              
+              const currentPct = currentCoverage[file]?.lines.pct || 0;
+              const basePct = baseCoverage[file]?.lines.pct || 0;
+              const diff = currentPct - basePct;
+              
+              if (Math.abs(diff) > 0.01) {
+                impactedFiles.push({
+                  name: file,
+                  current: currentPct.toFixed(2),
+                  diff: diff.toFixed(2),
+                  arrow: diff < -0.01 ? '⬇️' : diff > 0.01 ? '⬆️' : '➡️'
+                });
+              }
+            }
+
+            let impactedTable = '';
+            if (impactedFiles.length > 0) {
+              impactedTable = '\n## Impacted Files\n\n| File | Coverage Δ |\n|------|------------|\n';
+              impactedFiles.forEach(f => {
+                impactedTable += `| \`${f.name}\` | \`${f.current}% (${f.diff >= 0 ? '+' : ''}${f.diff}%)\` ${f.arrow} |\n`;
+              });
+            }
+
+            // Final comment
+            const comment = `## Coverage Report\n\n${header}\n${diffTable}${impactedTable}`;
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('## Coverage Report')
+            );
+
+            if (botComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
