@@ -190,7 +190,9 @@ jobs:
             console.log('Total files in current coverage:', Object.keys(currentCoverage).length);
             console.log('Total files in base coverage:', Object.keys(baseCoverage).length);
 
-            if (!isFirstRun) {
+            if (isFirstRun) {
+              impactedTable = '\n### Impacted Files\n\n📋 **Baseline established**\n\n_This is the first coverage report. Future PRs will show which files are impacted by coverage changes._';
+            } else {
               const impactedFiles = [];
               for (const file of Object.keys(currentCoverage)) {
                 if (file === 'total') continue;
