@@ -157,6 +157,14 @@ jobs:
             const currentMisses = current.lines.total - current.lines.covered;
             const missesDiff = currentMisses - baseMisses;
 
+            const formatValue = (v, len = 9) => String(v).padStart(len);
+            const formatText = (v, len = 9) => String(v).padEnd(len); 
+            const formatRow = (label, useHighlight, unit, base, current, diff) => {
+              const sign = diff >= 0 ? '+' : '';
+              const prefix = diff >= 0 ? '+' : '-'
+              return `${useHighlight ? prefix + ' ' : '  '}${formatText(label,8)}${formatValue(base + unit)}${formatValue(current + unit)}${formatValue(sign + diff + unit,10)}     `
+            }
+
             // Header
             let header;
             if (isFirstRun) {
@@ -175,14 +183,14 @@ jobs:
             @@             Coverage Diff             @@
             ##             main   ${String('#' + currentIssueNumber).padStart(6)}       +/-   ##
             ===========================================
-            ${coveragePercentDiff >= 0 ? '+' : '-'} Coverage   ${baseCoveragePercent.toFixed(2).padStart(5)}%   ${currentCoveragePercent.toFixed(2).padStart(5)}%   ${(coveragePercentDiff >= 0 ? '+' : '') + coveragePercentDiff.toFixed(2).padStart(5)}%     
+            ${formatRow('Coverage', true, '%', baseCoveragePercent, currentCoveragePercent, coveragePercentDiff)}
             ===========================================
-              Files      ${String(baseFiles).padStart(6)}   ${String(currentFiles).padStart(6)}   ${(filesDiff >= 0 ? '+' : '') + String(filesDiff).padStart(6)}
-              Lines      ${String(baseLines).padStart(6)}   ${String(currentLines).padStart(6)}   ${(linesDiff >= 0 ? '+' : '') + String(linesDiff).padStart(6)}
-              Branches   ${String(baseBranches).padStart(6)}   ${String(currentBranches).padStart(6)}   ${(branchesDiff >= 0 ? '+' : '') + String(branchesDiff).padStart(6)}
+            ${formatRow('Files', false, '', baseFiles, currentFiles, filesDiff)}
+            ${formatRow('Lines', false, '', baseLines, currentLines, linesDiff)}
+            ${formatRow('Branches', false, '', baseBranches, currentBranches, branchesDiff)}
             ===========================================
-            ${hitsDiff >= 0 ? '+' : '-'} Hits       ${String(baseHits).padStart(6)}   ${String(currentHits).padStart(6)}   ${(hitsDiff >= 0 ? '+' : '') + String(hitsDiff).padStart(6)}     
-            ${missesDiff >= 0 ? '+' : '-'} Misses     ${String(baseMisses).padStart(6)}   ${String(currentMisses).padStart(6)}   ${(missesDiff >= 0 ? '+' : '') + String(missesDiff).padStart(6)}     
+            ${formatRow('Hits', true, '', baseHits, currentHits, hitsDiff)}
+            ${formatRow('Misses', true, '', baseMisses, currentMisses, missesDiff)}
             \`\`\`
             `;
 
