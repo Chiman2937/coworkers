@@ -161,8 +161,9 @@ jobs:
             const formatRow = (label, useHighlight, base, current, diff) => {
               const sign = diff >=0 ? '+' : '';
               const prefix = diff >= 0 ? '+' : '-'
-              return `${useHighlight ? prefix + ' ' : '  '}${formatValue(base)}${formatValue(current)}${formatValue(diff)}`
+              return `${useHighlight ? prefix + ' ' : '  '}${formatValue(label,8)}${formatValue(base)}${formatValue(current)}${formatValue(diff)}`
             }
+
             // Header
             let header;
             if (isFirstRun) {
