@@ -207,10 +207,12 @@ jobs:
               }
               
               if (impactedFiles.length > 0) {
-                impactedTable = '\n## Impacted Files\n\n| File | Coverage Δ |\n|------|------------|\n';
+                impactedTable = '\n### Impacted Files\n\n| File | Coverage Δ |\n|------|------------|\n';
                 impactedFiles.forEach(f => {
                   impactedTable += `| \`${f.name}\` | \`${f.current}% (${f.diff >= 0 ? '+' : ''}${f.diff}%)\` ${f.arrow} |\n`;
                 });
+              } else {
+                impactedTable = '\n### Impacted Files\n\n✅ **No files were impacted by this PR**\n\n_All modified files maintained their current coverage._';
               }
             }
 
