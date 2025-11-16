@@ -151,9 +151,9 @@ jobs:
             const diffTable = `
             \`\`\`diff
             @@            Coverage Diff             @@
-            ##               main   #${String(context.issue.number).padStart(6)}      +/-   ##
+            ##               main   ${String('#' + context.issue.number).padStart(6)}      +/-   ##
             ==========================================
-            ${coverageDiff >= 0 ? '+' : '-'} Coverage   ${base.lines.pct.toFixed(2).padStart(6)}%   ${current.lines.pct.toFixed(2).padStart(6)}%   ${(coverageDiff >= 0 ? '+' : '') + coverageDiff.toFixed(2).padStart(6)}%     
+            ${coverageDiff >= 0 ? '+' : '-'} Coverage   ${base.lines.pct.toFixed(2).padStart(5)}%   ${current.lines.pct.toFixed(2).padStart(5)}%   ${(coverageDiff >= 0 ? '+' : '') + coverageDiff.toFixed(2).padStart(5)}%     
             ==========================================
               Files      ${String(base.statements.total).padStart(6)}   ${String(current.statements.total).padStart(6)}   ${(linesDiff >= 0 ? '+' : '') + String(linesDiff).padStart(6)}
               Lines      ${String(base.lines.total).padStart(6)}   ${String(current.lines.total).padStart(6)}   ${(linesDiff >= 0 ? '+' : '') + String(linesDiff).padStart(6)}
