@@ -236,7 +236,7 @@ jobs:
 
             const botComment = comments.find(comment => 
               comment.user.type === 'Bot' && 
-              comment.body.includes('## Coverage Report')
+              comment.body.includes('## 📊 Coverage Report')
             );
 
             if (botComment) {
