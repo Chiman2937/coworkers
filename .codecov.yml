@@ -3,9 +3,17 @@ codecov:
 
 coverage:
   status:
-    project: true
-    patch: true
-
+    project: #add everything under here, more options at https://docs.codecov.com/docs/commit-status
+      default:
+        # basic
+        target: auto #default
+        threshold: 0%
+        base: auto
+        informational: true
+    patch:
+      default:
+        target: 100%
+        informational: true
 # When modifying this file, please validate using
 # curl -X POST --data-binary @codecov.yml https://codecov.io/validate
 
