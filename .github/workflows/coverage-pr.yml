@@ -169,6 +169,8 @@ jobs:
 
             // Coverage Diff Table
             const diffTable = `
+            ### Coverage Summary
+
             \`\`\`diff
             @@             Coverage Diff             @@
             ##             main   ${String('#' + currentIssueNumber).padStart(6)}       +/-   ##
