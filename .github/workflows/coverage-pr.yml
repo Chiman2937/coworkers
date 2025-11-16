@@ -160,7 +160,7 @@ jobs:
             // Header
             let header;
             if (isFirstRun) {
-              header = `First Coverage Report\n\nCurrent coverage: **${current.lines.pct.toFixed(2)}%**\n\n_This is the first coverage report. Future PRs will show diff against this baseline._`;
+              header = `This is the first coverage report. Future PRs will show diff against this baseline.\n\nCurrent coverage: **${current.lines.pct.toFixed(2)}%**\n\n`;
             } else {
               const direction = coverageDiff > 0 ? 'increase' : coverageDiff < 0 ? 'decrease' : 'remain the same';
               const emoji = coverageDiff > 0 ? '📈' : coverageDiff < 0 ? '📉' : '➡️';
@@ -170,7 +170,7 @@ jobs:
             // Coverage Diff Table
             const diffTable = `
             \`\`\`diff
-            @@            Coverage Diff              @@
+            @@             Coverage Diff             @@
             ##             main   ${String('#' + currentIssueNumber).padStart(6)}       +/-   ##
             ===========================================
             ${coveragePercentDiff >= 0 ? '+' : '-'} Coverage   ${baseCoveragePercent.toFixed(2).padStart(5)}%   ${currentCoveragePercent.toFixed(2).padStart(5)}%   ${(coveragePercentDiff >= 0 ? '+' : '') + coveragePercentDiff.toFixed(2).padStart(5)}%     
