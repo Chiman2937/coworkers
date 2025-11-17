@@ -101,8 +101,8 @@ module.exports = async ({ github, context }) => {
   const formatValue = (v, len = 9) => String(v).padStart(len);
   const formatText = (v, len = 9) => String(v).padEnd(len);
   const formatRow = (label, useHighlight, unit, base, current, diff) => {
-    const sign = diff >= 0 ? '+' : '';
-    const prefix = diff >= 0 ? '+' : '-';
+    const sign = diff > 0 ? '+' : '';
+    const prefix = diff > 0 ? '+' : diff < 0 ? '-' : ' ';
     return `${useHighlight ? prefix + ' ' : '  '}${formatText(label, 8)}${formatValue(base + unit)}${formatValue(current + unit)}${formatValue(sign + diff + unit, 10)}     `;
   };
 
