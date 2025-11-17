@@ -9,16 +9,17 @@ module.exports = async ({ github, context }) => {
     console.log('❌ No coverage file generated. Tests may have failed.');
 
     // Post error comment
-    const errorComment = `## Coverage Report
+    const errorComment = `
+## 📊 Coverage Report
               
-              ⚠️ **Unable to generate coverage report**
-              
-              Coverage file not found. This usually means:
-              - Tests failed to run
-              - \`npm run test:coverage\` didn't generate coverage
-              - Coverage directory is not created
-              
-              Please check the test execution logs above.`;
+⚠️ **Unable to generate coverage report**
+
+Coverage file not found. This usually means:
+- Tests failed to run
+- \`npm run test:coverage\` didn't generate coverage
+- Coverage directory is not created
+
+Please check the test execution logs above.`;
 
     const { data: comments } = await github.rest.issues.listComments({
       owner: context.repo.owner,
