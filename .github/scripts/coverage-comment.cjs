@@ -123,22 +123,22 @@ module.exports = async ({ github, context }) => {
 
   // Coverage Diff Table
   const diffTable = `
-            ### Coverage Summary
+### Coverage Summary
 
-            \`\`\`diff
-            @@             Coverage Diff             @@
-            ##             main   ${String('#' + currentIssueNumber).padStart(6)}       +/-   ##
-            ===========================================
-            ${formatRow('Coverage', true, '%', baseCoveragePercent, currentCoveragePercent, coveragePercentDiff)}
-            ===========================================
-            ${formatRow('Files', false, '', baseFiles, currentFiles, filesDiff)}
-            ${formatRow('Lines', false, '', baseLines, currentLines, linesDiff)}
-            ${formatRow('Branches', false, '', baseBranches, currentBranches, branchesDiff)}
-            ===========================================
-            ${formatRow('Hits', true, '', baseHits, currentHits, hitsDiff)}
-            ${formatRow('Misses', true, '', baseMisses, currentMisses, missesDiff)}
-            \`\`\`
-            `;
+\`\`\`diff
+@@             Coverage Diff             @@
+##             main   ${String('#' + currentIssueNumber).padStart(6)}       +/-   ##
+===========================================
+${formatRow('Coverage', true, '%', baseCoveragePercent, currentCoveragePercent, coveragePercentDiff)}
+===========================================
+${formatRow('Files', false, '', baseFiles, currentFiles, filesDiff)}
+${formatRow('Lines', false, '', baseLines, currentLines, linesDiff)}
+${formatRow('Branches', false, '', baseBranches, currentBranches, branchesDiff)}
+===========================================
+${formatRow('Hits', true, '', baseHits, currentHits, hitsDiff)}
+${formatRow('Misses', true, '', baseMisses, currentMisses, missesDiff)}
+\`\`\`
+`;
 
   // Impacted Files (skip for first run)
   let impactedTable = '';
